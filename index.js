@@ -11,6 +11,19 @@ const pixelPath = path.join(__dirname, '/pixel.png');
 const app = express();
 const port = 8080;
 
+function formatTime(time) {
+  const format = {
+    day: time.getDate(),
+    month: time.getMonth() + 1,
+    year: time.getFullYear(),
+    hours: time.getHours(),
+    minutes: time.getMinutes(),
+    seconds: time.getSeconds()
+  };
+
+  return `${format.year}-${format.month}-${format.day} ${format.hours}:${format.minutes}:${format.seconds}`;
+}
+
 function getIpFromRequest(req) {
   let ips = (
     req.headers['cf-connecting-ip'] ||
@@ -31,10 +44,13 @@ async function locateIpAddress(Address) {
 app.get('/', async (req, res) => {
   res.sendFile(pixelPath);
 
+  const currentTime = new Date();
+  const timeStamp = formatTime(currentTime);
   const userAgent = req.header('User-Agent');
   const userIp = getIpFromRequest(req);
   const countryName = (await locateIpAddress(userIp))?.country_name;
 
+  console.log(timeStamp);
   console.log(userAgent);
   console.log(userIp);
   console.log(countryName);
