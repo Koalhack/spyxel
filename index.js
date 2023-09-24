@@ -1,8 +1,10 @@
+//INFO: Import dependencies
 import { fileURLToPath } from 'url';
 import path from 'path';
 import express from 'express';
 import fs from 'fs';
 
+//NOTE: get __filename and __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -40,8 +42,15 @@ function getIpFromRequest(req) {
 
 //NOTE: Get IP address location with geolocation-db
 async function locateIpAddress(Address) {
-  const response = await fetch(`https://geolocation-db.com/json/${Address}`);
-  return await response.json();
+  let json = null;
+  try {
+    const response = await fetch(`https://geolocation-db.com/json/${Address}`);
+    json = await response.json();
+  } catch (err) {
+    if (err) throw err;
+  }
+
+  return json;
 }
 
 //NOTE: Add String separator for log separation
@@ -74,6 +83,7 @@ app.get('/', async (req, res) => {
 
   //NOTE: Print data log
   console.log(log);
+
   //NOTE: write logs data in file
   fs.appendFile(
     `${__dirname}/log.txt`,
