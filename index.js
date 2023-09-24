@@ -31,9 +31,11 @@ async function locateIpAddress(Address) {
 app.get('/', async (req, res) => {
   res.sendFile(pixelPath);
 
+  const userAgent = req.header('User-Agent');
   const userIp = getIpFromRequest(req);
   const countryName = (await locateIpAddress(userIp))?.country_name;
 
+  console.log(userAgent);
   console.log(userIp);
   console.log(countryName);
 });
