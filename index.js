@@ -44,6 +44,10 @@ async function locateIpAddress(Address) {
   return await response.json();
 }
 
+function logEntry({ timeStamp, userAgent, userIp, countryName }) {
+  return `Email/WebService visit\nTimestamp: ${timeStamp}\nUser Agent: ${userAgent}\nIP Address: ${userIp}\nCountry Name: ${countryName}`;
+}
+
 //NOTE: Route for the default page
 app.get('/', async (req, res) => {
   //NOTE: Send pixel image to route
@@ -56,10 +60,7 @@ app.get('/', async (req, res) => {
   const userIp = getIpFromRequest(req);
   const countryName = (await locateIpAddress(userIp))?.country_name;
 
-  console.log(timeStamp);
-  console.log(userAgent);
-  console.log(userIp);
-  console.log(countryName);
+  console.log(logEntry({ timeStamp, userAgent, userIp, countryName }));
 });
 
 //NOTE: Launch app to specified port
