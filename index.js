@@ -44,6 +44,11 @@ async function locateIpAddress(Address) {
   return await response.json();
 }
 
+//NOTE: Add String separator for log separation
+function logSeparator(separator, size) {
+  return '\n' + separator.repeat(size) + '\n';
+}
+
 function logEntry({ timeStamp, userAgent, userIp, countryName }) {
   return `Email/WebService visit\nTimestamp: ${timeStamp}\nUser Agent: ${userAgent}\nIP Address: ${userIp}\nCountry Name: ${countryName}`;
 }
@@ -60,7 +65,25 @@ app.get('/', async (req, res) => {
   const userIp = getIpFromRequest(req);
   const countryName = (await locateIpAddress(userIp))?.country_name;
 
-  console.log(logEntry({ timeStamp, userAgent, userIp, countryName }));
+  const log = logEntry({
+    timeStamp: timeStamp,
+    userAgent: userAgent,
+    userIp: userIp,
+    countryName: countryName
+  });
+
+  //NOTE: Print data log
+  console.log(log);
+  //NOTE: write logs data in file
+  fs.appendFile(
+    `${__dirname}/log.txt`,
+    log + logSeparator('=', 20),
+    {},
+    err => {
+      if (err) throw err;
+      console.log('Saved');
+    }
+  );
 });
 
 //NOTE: Launch app to specified port
