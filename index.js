@@ -23,10 +23,19 @@ function getIpFromRequest(req) {
   return ips[0].trim();
 }
 
-app.get('/', function (req, res) {
-  const userIp = getIpFromRequest(req);
-  console.log(userIp);
+async function locateIpAddress(Address) {
+  const response = await fetch(`https://geolocation-db.com/json/${Address}`);
+  return await response.json();
+}
+
+app.get('/', async (req, res) => {
   res.sendFile(pixelPath);
+
+  const userIp = getIpFromRequest(req);
+  const countryName = (await locateIpAddress(userIp))?.country_name;
+
+  console.log(userIp);
+  console.log(countryName);
 });
 
 app.listen(port, () => {
