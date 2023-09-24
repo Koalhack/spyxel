@@ -62,8 +62,8 @@ function logEntry({ timeStamp, userAgent, userIp, countryName }) {
   return `Email/WebService visit\nTimestamp: ${timeStamp}\nUser Agent: ${userAgent}\nIP Address: ${userIp}\nCountry Name: ${countryName}`;
 }
 
-//NOTE: Route for the default page
-app.get('/', async (req, res) => {
+//NOTE: Route for the default and others pages
+app.get(['/', '/:name'], async (req, res) => {
   //NOTE: Send pixel image to route
   res.sendFile(pixelPath);
 
