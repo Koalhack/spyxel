@@ -58,23 +58,27 @@ function logSeparator(separator, size) {
   return '\n' + separator.repeat(size) + '\n';
 }
 
-function logEntry({ timeStamp, userAgent, userIp, countryName }) {
-  return `Email/WebService visit\nTimestamp: ${timeStamp}\nUser Agent: ${userAgent}\nIP Address: ${userIp}\nCountry Name: ${countryName}`;
+function logEntry({ imageID, timeStamp, userAgent, userIp, countryName }) {
+  return `Email/WebService visit\nImage ID: ${imageID}\nTimestamp: ${timeStamp}\nUser Agent: ${userAgent}\nIP Address: ${userIp}\nCountry Name: ${countryName}`;
 }
 
 //NOTE: Route for the default and others pages
-app.get(['/', '/:name'], async (req, res) => {
+app.get(['/', '/:id'], async (req, res) => {
   //NOTE: Send pixel image to route
   res.sendFile(pixelPath);
 
+  //INFO: Get actual timeStamp
   const currentTime = new Date();
   const timeStamp = formatTime(currentTime);
+
+  const imageID = req.params['id'] || null;
 
   const userAgent = req.header('User-Agent');
   const userIp = getIpFromRequest(req);
   const countryName = (await locateIpAddress(userIp))?.country_name;
 
   const log = logEntry({
+    imageID: imageID,
     timeStamp: timeStamp,
     userAgent: userAgent,
     userIp: userIp,
