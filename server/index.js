@@ -45,6 +45,7 @@ async function locateIpAddress(Address) {
   let json = null;
   try {
     const response = await fetch(`https://geolocation-db.com/json/${Address}`);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     json = await response.json();
   } catch (err) {
     if (err) throw err;
@@ -64,7 +65,7 @@ function logEntry({ imageID, timeStamp, userAgent, userIp, countryName }) {
 
 //NOTE: Route for the default and others pages
 app.get(['/', '/:id'], async (req, res) => {
-  //NOTE: Send pixel image to route
+  //NOTE: Send pixel image to Route
   res.sendFile(pixelPath);
 
   //INFO: Get actual timeStamp
