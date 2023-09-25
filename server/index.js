@@ -4,6 +4,7 @@ import path from 'path';
 import express from 'express';
 import fs from 'fs';
 
+import { launchLogo } from './utils/ASCII.js';
 import { ignoreFavicon } from './middleware/favicon.js';
 
 //NOTE: get __filename and __dirname
@@ -20,7 +21,9 @@ const port = 8080;
 //INFO: ignore Favicon (little icon in tab)
 app.use(ignoreFavicon);
 
-//NOTE: Format the time (Y-m-d H:M:S)
+//NOTE: Functions
+
+//INFO: Format the time (Y-m-d H:M:S)
 function formatTime(time) {
   const format = {
     day: String(time.getDate()).padStart(2, '0'),
@@ -34,7 +37,7 @@ function formatTime(time) {
   return `${format.year}-${format.month}-${format.day} ${format.hours}:${format.minutes}:${format.seconds}`;
 }
 
-//NOTE: Get IP from user
+//INFO: Get IP from user
 function getIpFromRequest(req) {
   let ips = (
     req.headers['cf-connecting-ip'] ||
@@ -47,7 +50,7 @@ function getIpFromRequest(req) {
   return ips[0].trim();
 }
 
-//NOTE: Get IP address location with geolocation-db
+//INFO: Get IP address location with geolocation-db
 async function locateIpAddress(Address) {
   let json = null;
   try {
@@ -61,7 +64,7 @@ async function locateIpAddress(Address) {
   return json;
 }
 
-//NOTE: Add String separator for log separation
+//INFO: Add String separator for log separation
 function logSeparator(separator, size) {
   return '\n' + separator.repeat(size) + '\n';
 }
@@ -70,9 +73,11 @@ function logEntry({ imageID, timeStamp, userAgent, userIp, countryName }) {
   return `Email/WebService visit\nImage ID: ${imageID}\nTimestamp: ${timeStamp}\nUser Agent: ${userAgent}\nIP Address: ${userIp}\nCountry Name: ${countryName}`;
 }
 
-//NOTE: Route for the default and others pages
+//NOTE: Routes
+
+//INFO: Route for the default and others pages
 app.get(['/', '/:id'], async (req, res) => {
-  //NOTE: Send pixel image to Route
+  //INFO: Send pixel image to Route
   res.sendFile(pixelPath);
 
   //INFO: Get actual timeStamp
@@ -93,10 +98,10 @@ app.get(['/', '/:id'], async (req, res) => {
     countryName: countryName
   });
 
-  //NOTE: Print data log
+  //INFO: Print data log
   console.log(log);
 
-  //NOTE: write logs data in file
+  //INFO: write logs data in file
   fs.appendFile(
     `${__dirname}/log.txt`,
     log + logSeparator('=', 20),
@@ -108,7 +113,8 @@ app.get(['/', '/:id'], async (req, res) => {
   );
 });
 
-//NOTE: Launch app to specified port
+//INFO: Launch app to specified port
 app.listen(port, () => {
   console.log(`server listening on port : ${port}`);
+  console.log(launchLogo());
 });
