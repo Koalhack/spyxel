@@ -4,6 +4,8 @@ import path from 'path';
 import express from 'express';
 import fs from 'fs';
 
+import { ignoreFavicon } from './middleware/favicon.js';
+
 //NOTE: get __filename and __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,6 +14,11 @@ const pixelPath = path.join(__dirname, '/pixel.png');
 
 const app = express();
 const port = 8080;
+
+//NOTE: Middleware
+
+//INFO: ignore Favicon (little icon in tab)
+app.use(ignoreFavicon);
 
 //NOTE: Format the time (Y-m-d H:M:S)
 function formatTime(time) {
