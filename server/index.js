@@ -4,8 +4,12 @@ import path from 'path';
 import express from 'express';
 import fs from 'fs';
 
-import { launchLogo } from './utils/ASCII.js';
+//INFO: Import local files
 import { ignoreFavicon } from './middleware/favicon.js';
+import { launchLogo } from './utils/ASCII.js';
+import { getIpFromRequest, locateIpAddress } from './utils/IP.js';
+import { formatTime } from './utils/time.js';
+import { logSeparator, logEntry } from './utils/log.js';
 
 //NOTE: get __filename and __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -20,58 +24,6 @@ const port = 8080;
 
 //INFO: ignore Favicon (little icon in tab)
 app.use(ignoreFavicon);
-
-//NOTE: Functions
-
-//INFO: Format the time (Y-m-d H:M:S)
-function formatTime(time) {
-  const format = {
-    day: String(time.getDate()).padStart(2, '0'),
-    month: String(time.getMonth() + 1).padStart(2, '0'),
-    year: String(time.getFullYear()).padStart(4, '0'),
-    hours: String(time.getHours()).padStart(2, '0'),
-    minutes: String(time.getMinutes()).padStart(2, '0'),
-    seconds: String(time.getSeconds()).padStart(2, '0')
-  };
-
-  return `${format.year}-${format.month}-${format.day} ${format.hours}:${format.minutes}:${format.seconds}`;
-}
-
-//INFO: Get IP from user
-function getIpFromRequest(req) {
-  let ips = (
-    req.headers['cf-connecting-ip'] ||
-    req.headers['x-real-ip'] ||
-    req.headers['x-forwarded-for'] ||
-    req.connection.remoteAddress ||
-    ''
-  ).split(',');
-
-  return ips[0].trim();
-}
-
-//INFO: Get IP address location with geolocation-db
-async function locateIpAddress(Address) {
-  let json = null;
-  try {
-    const response = await fetch(`https://geolocation-db.com/json/${Address}`);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    json = await response.json();
-  } catch (err) {
-    if (err) throw err;
-  }
-
-  return json;
-}
-
-//INFO: Add String separator for log separation
-function logSeparator(separator, size) {
-  return '\n' + separator.repeat(size) + '\n';
-}
-
-function logEntry({ imageID, timeStamp, userAgent, userIp, countryName }) {
-  return `Email/WebService visit\nImage ID: ${imageID}\nTimestamp: ${timeStamp}\nUser Agent: ${userAgent}\nIP Address: ${userIp}\nCountry Name: ${countryName}`;
-}
 
 //NOTE: Routes
 
