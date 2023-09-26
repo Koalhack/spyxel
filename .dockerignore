@@ -1,0 +1,20 @@
+# Ignore NodeJS modules folder and log file
+node_modules
+npm-debug.log
+
+#Ignore Docker File
+Dockerfile
+.dockerignore
+
+# Ignore Git file and folder
+.git
+.gitignore
+
+# Ignore README file
+README.md
+
+# Ignore Prettier config file
+.prettierrc.yml
+
+# Ignore server log file
+server/log.txt
