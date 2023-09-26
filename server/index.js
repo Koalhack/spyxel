@@ -3,6 +3,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import express from 'express';
 import fs from 'fs';
+import pc from 'picocolors';
 
 //INFO: Import local files
 import { ignoreFavicon } from './middleware/favicon.js';
@@ -17,6 +18,7 @@ const __dirname = path.dirname(__filename);
 
 const pixelPath = path.join(__dirname, '/pixel.png');
 
+//NOTE: init express app
 const app = express();
 const port = 8080;
 
@@ -60,13 +62,13 @@ app.get(['/', '/:id'], async (req, res) => {
     {},
     err => {
       if (err) throw err;
-      console.log('Saved');
+      console.log(pc.green('Saved') + '\n');
     }
   );
 });
 
 //INFO: Launch app to specified port
 app.listen(port, () => {
-  console.log(`server listening on port : ${port}`);
-  console.log(launchLogo());
+  console.log(pc.yellow(`Server listening on port : ${pc.bold(port)}`));
+  console.log(pc.blue(launchLogo()));
 });
