@@ -2,4 +2,4 @@
 node_modules/
 
 # Log file
-log.txt
+server/log.txt
