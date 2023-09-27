@@ -1,0 +1,20 @@
+version: '3.9'
+
+name: 'spyxelTunnel'
+
+services:
+  spyxel:
+    container_name: spyxel
+    image: koalhack/spyxel
+    ports:
+      - '8080:8080'
+    stdin_open: true
+    tty: true
+
+  tunnel:
+    container_name: cloudflared-tunnel
+    image: cloudflare/cloudflared
+    restart: unless-stopped
+    command: tunnel -url 127.0.0.1:8080
+    stdin_open: true
+    tty: true
