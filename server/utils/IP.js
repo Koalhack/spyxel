@@ -13,9 +13,23 @@ export function getIpFromRequest(req) {
 
 //INFO: Get IP address location with geolocation-db
 export async function locateIpAddress(Address) {
+  const APIurl = 'http://ip-api.com/json';
+  const QueryString = new URLSearchParams({
+    fields: 'status,message,country,regionName,city,zip,lat,lon'
+  }).toString();
+  const options = {
+    method: 'GET',
+    headers: new Headers({
+      accept: 'application/json'
+    })
+  };
+
   let json = null;
   try {
-    const response = await fetch(`https://geolocation-db.com/json/${Address}`);
+    const response = await fetch(
+      `${APIurl}/${Address}?${QueryString}`,
+      options
+    );
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     json = await response.json();
   } catch (err) {

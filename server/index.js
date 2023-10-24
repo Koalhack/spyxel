@@ -42,14 +42,14 @@ app.get(['/', '/:id'], async (req, res) => {
 
   const userAgent = req.header('User-Agent');
   const userIp = getIpFromRequest(req);
-  const countryName = (await locateIpAddress(userIp))?.country_name;
+  const geoInfo = await locateIpAddress(userIp);
 
   const log = logEntry({
     imageID: imageID,
     timeStamp: timeStamp,
     userAgent: userAgent,
     userIp: userIp,
-    countryName: countryName
+    geoInfo: JSON.stringify(geoInfo, null, 3).replace(/"([^"]+)":/g, '$1:')
   });
 
   //INFO: Print data log
@@ -70,5 +70,5 @@ app.get(['/', '/:id'], async (req, res) => {
 //INFO: Launch app to specified port
 app.listen(port, () => {
   console.log(pc.yellow(`Server listening on port : ${pc.bold(port)}`));
-  console.log(pc.blue(launchLogo()));
+  console.log(launchLogo);
 });
