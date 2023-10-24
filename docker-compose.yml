@@ -1,6 +1,6 @@
 version: '3.9'
 
-name: 'spyxelTunnel'
+name: spyxelTunnel
 
 services:
   spyxel:
@@ -15,6 +15,7 @@ services:
     container_name: cloudflared-tunnel
     image: cloudflare/cloudflared
     restart: unless-stopped
+    network_mode: host
     command: tunnel -url 127.0.0.1:8080
     stdin_open: true
     tty: true
